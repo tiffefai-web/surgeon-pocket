@@ -1,11 +1,11 @@
 require('dotenv').config({ path: '.env.local' });
-if (!process.env.POSTGRES_URL) require('dotenv').config();
+if (!(process.env.POSTGRES_URL || process.env.DATABASE_URL)) require('dotenv').config();
 
 const { Pool } = require('pg');
 const { getWeekOfMonth } = require('date-fns');
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL || 'postgresql://user:password@localhost:5432/surgeon_pocket',
+  connectionString: (process.env.POSTGRES_URL || process.env.DATABASE_URL) || 'postgresql://user:password@localhost:5432/surgeon_pocket',
 });
 
 const HOLIDAY_DATE = '2026-06-10'; // Wednesday of week 2
@@ -156,3 +156,4 @@ async function seed() {
 }
 
 seed();
+
