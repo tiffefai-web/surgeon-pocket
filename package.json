@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:setup": "node scripts/init-db.js && node scripts/migrate.js && node scripts/seed.js && node scripts/seed-june.js && node scripts/seed-surgeon-thursdays.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
