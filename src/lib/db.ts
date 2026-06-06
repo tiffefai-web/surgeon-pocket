@@ -11,18 +11,58 @@ function convertSql(sql: string, params: any[]) {
   return { text, values: params };
 }
 
+const keyMap: Record<string, string> = {
+  caseid: 'CaseID',
+  userid: 'UserID',
+  patient_hn: 'Patient_HN',
+  firstname: 'FirstName',
+  lastname: 'LastName',
+  gender: 'Gender',
+  age: 'Age',
+  diagnosis: 'Diagnosis',
+  operation: 'Operation',
+  patienttype: 'PatientType',
+  casestatus: 'CaseStatus',
+  location: 'Location',
+  underlying_diseases: 'Underlying_Diseases',
+  past_surgical_history: 'Past_Surgical_History',
+  high_risk_meds: 'High_Risk_Meds',
+  preop_tags: 'PreOp_Tags',
+  extra_notes: 'Extra_Notes',
+  cancellationreason: 'CancellationReason',
+  contactphone: 'ContactPhone',
+  admitdaysprior: 'AdmitDaysPrior',
+  isadmitted: 'IsAdmitted',
+  department: 'Department',
+  scheduleid: 'ScheduleID',
+  date: 'Date',
+  starttime: 'StartTime',
+  endtime: 'EndTime',
+  roomnumber: 'RoomNumber',
+  sequenceorder: 'SequenceOrder',
+  consultanes_status: 'ConsultAnes_Status',
+  medresult_status: 'MedResult_Status',
+  note: 'Note',
+  leaveid: 'LeaveID',
+  yielded_roomnumber: 'Yielded_RoomNumber',
+  remarkid: 'RemarkID',
+  remarktext: 'RemarkText',
+  username: 'Username',
+  passwordhash: 'PasswordHash',
+  role: 'Role',
+  fullname: 'FullName',
+  avatarurl: 'AvatarURL',
+  surgeonname: 'SurgeonName'
+};
+
 function makeCaseInsensitive(row: any) {
   if (!row || typeof row !== 'object') return row;
-  return new Proxy(row, {
-    get(target, prop, receiver) {
-      if (typeof prop === 'string') {
-        if (prop in target) return Reflect.get(target, prop, receiver);
-        const lowerProp = prop.toLowerCase();
-        if (lowerProp in target) return Reflect.get(target, lowerProp, receiver);
-      }
-      return Reflect.get(target, prop, receiver);
-    }
-  });
+  const newRow: any = {};
+  for (const key of Object.keys(row)) {
+    const mappedKey = keyMap[key] || key;
+    newRow[mappedKey] = row[key];
+  }
+  return newRow;
 }
 
 export async function openDb() {
